@@ -1,8 +1,11 @@
 # Assumption: the group is trusted to read secret information
 umask u=rwx,g=rx,o=
-mkdir -p /etc/wal-e.d/env
-echo "$AWS_SECRET_ACCESS_KEY" > /etc/wal-e.d/env/AWS_SECRET_ACCESS_KEY
-echo "$AWS_ACCESS_KEY" > /etc/wal-e.d/env/AWS_ACCESS_KEY_ID
+mkdir -p /var/lib/pgsql/9.2/data/env
+echo "$AWS_SECRET_ACCESS_KEY" > /var/lib/pgsql/9.2/data/env/AWS_SECRET_ACCESS_KEY
+echo "$AWS_ACCESS_KEY" > /var/lib/pgsql/9.2/data/env/AWS_ACCESS_KEY_ID
 #s3://some-bucket/directory/or/whatever
-echo "$WALE_S3_PREFIX" > /etc/wal-e.d/env/WALE_S3_PREFIX
-chown -R root:postgres /etc/wal-e.d
+echo "$WALE_S3_PREFIX" > /var/lib/pgsql/9.2/data/env/WALE_S3_PREFIX
+chown -R root:postgres /var/lib/pgsql/9.2/data/env
+
+
+su - postgres -c "crontab -l | { cat; echo \"0 3 * * * /usr/bin/envdir /var/lib/pgsql/9.2/data/env /usr/bin/wal-e backup-push /var/lib/pgsql/9.2/data\";} | crontab -"
