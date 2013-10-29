@@ -8,4 +8,4 @@ echo "$WALE_S3_PREFIX" > /var/lib/pgsql/9.2/data/env/WALE_S3_PREFIX
 chown -R root:postgres /var/lib/pgsql/9.2/data/env
 
 
-su - postgres -c "crontab -l | { cat; echo \"0 3 * * * /usr/bin/envdir /var/lib/pgsql/9.2/data/env /usr/bin/wal-e backup-push /var/lib/pgsql/9.2/data\";} | crontab -"
+su - postgres -c "crontab -l | { cat; echo \"0 3 * * * /usr/local/bin/envdir /var/lib/pgsql/9.2/data/env /usr/bin/wal-e backup-push /var/lib/pgsql/9.2/data\";} | crontab -"
