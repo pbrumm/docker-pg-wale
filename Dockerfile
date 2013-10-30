@@ -22,5 +22,10 @@ echo "shared_buffers = 4GB" >> /var/lib/pgsql/9.2/data/postgresql.conf
 
 RUN yum install -y vixie-cron crontabs
 RUN /sbin/chkconfig crond on
-ADD . /usr/bin/
+
+RUN yum install -y openssh-server passwd openssh-client
+RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+RUN sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config
+
+ADD . /bin/
 EXPOSE 5432
